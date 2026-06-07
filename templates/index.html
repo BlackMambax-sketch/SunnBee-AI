@@ -1,147 +1,75 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunnBee AI</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
+
+    <!-- FLOATING DECOR -->
+    <div class="floating floating1">☀️</div>
+    <div class="floating floating2">✨</div>
+    <div class="floating floating3">💕</div>
+    <div class="floating floating4">🌈</div>
 
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-
         <div class="sidebar-top">
-
             <div class="logo-area">
-
                 <div class="logo">
-
-                    <img
-                    src="/static/reactions/happy.png"
-                    class="main-logo">
-
+                    <img src="/static/reactions/happy.png" class="main-logo" alt="SunnBee Logo">
                 </div>
-
                 <div>
-
                     <h2>SunnBee</h2>
-
-                    <p>
-                        your sunshine AI companion ☀️✨
-                    </p>
-
+                    <p>your sunshine AI companion ☀️✨</p>
                 </div>
-
             </div>
-
-            <button id="newChatBtn">
-                + New Chat
-            </button>
-
+            <button id="newChatBtn">+ New Chat</button>
         </div>
 
         <!-- HISTORY -->
-        <div class="history-list"
-             id="historyList">
-
-        </div>
-
+        <div class="history-list" id="historyList"></div>
     </div>
 
     <!-- MAIN -->
     <div class="main">
-
         <!-- HEADER -->
         <div class="header">
-
-            <button class="menu-btn"
-                    id="menuBtn">
-
-                ☰
-
-            </button>
-
+            <button class="menu-btn" id="menuBtn">☰</button>
             <div class="header-title">
-
                 <div class="header-logo">
-
-                    <img
-                    src="/static/reactions/happy.png"
-                    class="main-logo">
-
+                    <img src="/static/reactions/happy.png" class="main-logo" alt="SunnBee Logo">
                 </div>
-
                 <div>
-
                     <h1>SunnBee</h1>
-
-                    <span>
-                        online ☀️✨
-                    </span>
-
+                    <span>online ☀️✨</span>
                 </div>
-
             </div>
-
         </div>
 
         <!-- CHAT -->
-        <div class="chat-area"
-             id="chatArea">
-
+        <div class="chat-area" id="chatArea">
             <!-- FIRST MESSAGE -->
             <div class="bot-wrapper">
-
-                <img
-                src="/static/reactions/happy.png"
-                class="bot-avatar">
-
+                <img src="/static/reactions/happy.png" class="bot-avatar" alt="Bot Avatar">
                 <div class="bot-message">
-
                     Haiii bestieee ☀️💕<br>
                     Aku SunnBee ✨<br><br>
-
-                    Temen ngobrol kamu yang:
-                    lucu,
-                    santai,
-                    dan siap nemenin yapping 😭💕
-
+                    Temen ngobrol kamu yang: lucu, santai, dan siap nemenin yapping 😭💕
                 </div>
-
             </div>
-
         </div>
 
         <!-- INPUT -->
         <div class="input-area">
-
-            <input type="text"
-                   id="messageInput"
-                   placeholder="curhat/yapping apa hari ini...? ✨">
-
-            <button id="sendBtn">
-
-                Kirim ☀️
-
-            </button>
-
+            <input type="text" id="messageInput" placeholder="curhat/yapping apa hari ini...? ✨">
+            <button id="sendBtn">Kirim ☀️</button>
         </div>
-
     </div>
 
     <!-- SCRIPT -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
-
 </html>
