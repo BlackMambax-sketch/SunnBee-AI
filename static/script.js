@@ -6,9 +6,9 @@ const sidebar = document.getElementById("sidebar");
 const menuBtn = document.getElementById("menuBtn");
 const newChatBtn = document.getElementById("newChatBtn");
 
-// TOGGLE SIDEBAR (Pintar Desktop & Mobile)
+// TOGGLE SIDEBAR (Sistem Cerdas Desktop & HP)
 menuBtn.onclick = (e) => {
-    e.stopPropagation(); // Mencegah event menutup sendiri langsung
+    e.stopPropagation();
     if (window.innerWidth > 768) {
         sidebar.classList.toggle("hide");
     } else {
@@ -16,7 +16,7 @@ menuBtn.onclick = (e) => {
     }
 };
 
-// AUTO-TUTUP SIDEBAR DI HP JIKA KLIK DI LUAR SIDEBAR
+// KLIK DI LUAR SIDEBAR UNTUK MENUTUP (Khusus HP)
 document.addEventListener("click", (e) => {
     if (window.innerWidth <= 768 && sidebar.classList.contains("show-mobile")) {
         if (!sidebar.contains(e.target) && e.target !== menuBtn) {
@@ -37,7 +37,6 @@ newChatBtn.onclick = () => {
         </div>
     `;
     
-    // Auto tutup menu di HP setelah pilih chat baru
     if (window.innerWidth <= 768) {
         sidebar.classList.remove("show-mobile");
     }
@@ -53,15 +52,12 @@ function addHistory(text){
 
 // ADD MESSAGE
 function addMessage(text, type, emotion="happy"){
-    // USER
     if(type === "user"){
         const div = document.createElement("div");
         div.className = "user-message";
         div.innerHTML = text;
         chatArea.appendChild(div);
-    }
-    // BOT
-    else{
+    } else {
         const wrapper = document.createElement("div");
         wrapper.className = "bot-wrapper";
         wrapper.innerHTML = `
@@ -80,12 +76,11 @@ async function sendMessage(){
     const message = messageInput.value.trim();
     if(!message) return;
 
-    // USER MESSAGE
     addMessage(message, "user");
     addHistory(message);
     messageInput.value = "";
 
-    // TYPING EFFECT
+    // TYPING BUBBLE
     const typing = document.createElement("div");
     typing.className = "bot-wrapper";
     typing.id = "typingBubble";
@@ -107,11 +102,9 @@ async function sendMessage(){
 
         const data = await response.json();
 
-        // REMOVE TYPING
         const bubble = document.getElementById("typingBubble");
         if(bubble) bubble.remove();
 
-        // BOT MESSAGE
         addMessage(data.reply, "bot", data.emotion);
 
     }catch(error){
@@ -122,9 +115,8 @@ async function sendMessage(){
     }
 }
 
-// BUTTON & KEY LISTENERS
+// TRIGGER
 sendBtn.onclick = sendMessage;
-
 messageInput.addEventListener("keypress", function(e){
     if(e.key === "Enter"){
         sendMessage();

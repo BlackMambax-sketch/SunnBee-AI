@@ -10,7 +10,8 @@ GLOBAL
 
 body{
     width:100%;
-    height:100vh;
+    height: 100vh;
+    height: 100dvh; /* Mengikuti tinggi dinamis layar HP */
     overflow:hidden;
     display:flex;
     background: linear-gradient(135deg, #0c0930, #17104f, #1b145f);
@@ -78,23 +79,22 @@ FLOATING EMOJI
 }
 
 /* =========================================
-SIDEBAR
+SIDEBAR (Desktop Default)
 ========================================= */
 .sidebar{
     width:300px;
-    height:100vh;
+    height:100%;
     background: rgba(255,255,255,0.05);
     backdrop-filter:blur(25px);
     border-right: 1px solid rgba(255,255,255,0.08);
     display:flex;
     flex-direction:column;
     padding:20px;
-    transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform 0.3s ease, margin-left 0.3s ease;
     box-shadow: 0 0 40px rgba(0,0,0,0.25);
-    z-index: 1000; /* Pastikan selalu di atas elemen lain */
+    z-index: 9999;
 }
 
-/* Logic Desktop */
 .sidebar.hide{
     margin-left:-300px;
 }
@@ -162,7 +162,6 @@ NEW CHAT BUTTON
     top:-40px;
     transition:0.6s;
 }
-
 #newChatBtn:hover::before{ left:300px; }
 
 /* =========================================
@@ -191,12 +190,14 @@ HISTORY
 }
 
 /* =========================================
-MAIN
+MAIN CONTENT AREA
 ========================================= */
 .main{
     flex:1;
     display:flex;
     flex-direction:column;
+    height: 100%;
+    min-height: 0; /* Mengunci agar isi flex tidak meluber keluar */
 }
 
 /* =========================================
@@ -219,11 +220,6 @@ HEADER
     color:white;
     font-size:40px;
     cursor:pointer;
-    transition: 0.2s;
-}
-
-.menu-btn:hover {
-    opacity: 0.7;
 }
 
 .header-title{
@@ -245,11 +241,7 @@ HEADER
     content:" ✨";
     animation: sparkle 1.5s infinite;
 }
-
-.header-title span{
-    font-size:14px;
-    opacity:0.8;
-}
+.header-title span{ font-size:14px; opacity:0.8; }
 
 @keyframes sparkle{
     0%{ opacity:0.4; }
@@ -263,15 +255,13 @@ CHAT AREA
 .chat-area{
     flex:1;
     overflow-y:auto;
+    min-height: 0; /* PENTING: Memaksa area chat melakukan scroll, bukan merusak layout */
     padding:20px;
     display:flex;
     flex-direction:column;
     gap:30px;
 }
 
-/* =========================================
-BOT WRAPPER & MESSAGE
-========================================= */
 .bot-wrapper{
     display:flex;
     align-items:flex-start;
@@ -313,9 +303,6 @@ BOT WRAPPER & MESSAGE
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
-/* =========================================
-USER MESSAGE
-========================================= */
 .user-message{
     align-self:flex-end;
     max-width:65%;
@@ -327,9 +314,7 @@ USER MESSAGE
     transition:0.3s;
 }
 
-.user-message:hover{
-    transform:translateY(-2px);
-}
+.user-message:hover{ transform:translateY(-2px); }
 
 /* =========================================
 INPUT AREA
@@ -341,6 +326,8 @@ INPUT AREA
     background: rgba(255,255,255,0.03);
     backdrop-filter:blur(20px);
     border-top: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    z-index: 10;
 }
 
 .input-area input{
@@ -356,18 +343,12 @@ INPUT AREA
     transition:0.3s;
 }
 
-.input-area input::placeholder{
-    color:rgba(255,255,255,0.6);
-}
-
+.input-area input::placeholder{ color:rgba(255,255,255,0.6); }
 .input-area input:focus{
     border: 1px solid rgba(255,145,220,0.5);
     box-shadow: 0 0 20px rgba(255,145,220,0.15);
 }
 
-/* =========================================
-SEND BUTTON
-========================================= */
 #sendBtn{
     border:none;
     padding:18px 28px;
@@ -398,70 +379,83 @@ SEND BUTTON
     top:-40px;
     transition:0.6s;
 }
-
 #sendBtn:hover::before{ left:200px; }
 
 /* =========================================
 SCROLLBAR
 ========================================= */
-::-webkit-scrollbar{ width:8px; }
+::-webkit-scrollbar{ width:6px; }
 ::-webkit-scrollbar-thumb{
     background: linear-gradient(180deg, #ff9fd8, #9bbcff);
     border-radius:10px;
 }
 
 /* =========================================
-MOBILE RESPONSIVE
+MOBILE MODIFICATIONS
 ========================================= */
 @media(max-width:768px){
-    /* Header adjustments */
-    .header-title h1 {
-        font-size: 26px;
+    body, .main {
+        height: 100vh;
+        height: 100dvh;
     }
-    .header-logo {
-        width: 48px;
-        height: 48px;
+
+    /* Penyesuaian Sidebar Slide luar layar untuk HP */
+    .sidebar{
+        position:fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        height: 100dvh;
+        transform: translateX(-100%);
+        margin-left: 0 !important;
+        transition: transform 0.3s ease;
+        width: 280px;
+    }
+
+    .sidebar.show-mobile {
+        transform: translateX(0);
+        box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.5);
     }
     
-    /* Sidebar logic for mobile */
-    .sidebar {
-        position: fixed;
-        left: -320px; /* Sembunyikan default di luar layar */
-        margin-left: 0 !important; /* Timpa class desktop */
-    }
-    .sidebar.show-mobile {
-        left: 0; /* Tampilkan saat tombol diklik */
-        box-shadow: 100vw 0 0 rgba(0,0,0,0.5); /* Efek redup di latar belakang */
+    .sidebar.hide {
+        transform: translateX(-100%);
+        margin-left: 0;
     }
 
-    /* Message Bubbles adjustments */
-    .bot-wrapper {
-        max-width: 95%;
-        gap: 10px;
+    .header {
+        height: 70px;
+        padding: 10px 15px;
     }
-    .bot-avatar {
-        width: 50px;
-        height: 50px;
-    }
+
+    .header-title h1{ font-size:26px; }
+    .header-logo { width: 44px; height: 44px; }
+
+    .bot-wrapper{ max-width:92%; gap: 10px; }
+    .bot-avatar { width: 48px; height: 48px; }
+
     .bot-message, .user-message {
-        font-size: 15px;
-        padding: 15px 18px;
+        font-size: 14px;
+        padding: 12px 16px;
+        border-radius: 20px;
     }
-    .user-message {
-        max-width: 90%;
+    .user-message{ max-width:85%; }
+
+    /* Mengangkat kolom ketik agar pas di atas batas sistem navbar HP */
+    .input-area {
+        padding: 12px;
+        gap: 10px;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
     }
 
-    /* Input area adjustments */
-    .input-area {
-        padding: 15px;
-        gap: 10px;
-    }
     .input-area input {
-        padding: 15px;
+        padding: 14px;
         font-size: 14px;
+        border-radius: 18px;
     }
+
     #sendBtn {
-        padding: 15px 20px;
+        padding: 14px 18px;
         font-size: 14px;
+        border-radius: 18px;
     }
 }
