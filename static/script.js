@@ -1,384 +1,97 @@
 const chatArea =
-document.getElementById("chatArea")
+    document.getElementById("chatArea");
 
-const messageInput =
-document.getElementById("messageInput")
+const input =
+    document.getElementById("messageInput");
 
 const sendBtn =
-document.getElementById("sendBtn")
-
-const historyList =
-document.getElementById("historyList")
+    document.getElementById("sendBtn");
 
 const sidebar =
-document.getElementById("sidebar")
+    document.getElementById("sidebar");
 
 const menuBtn =
-document.getElementById("menuBtn")
+    document.getElementById("menuBtn");
 
-const newChatBtn =
-document.getElementById("newChatBtn")
+const mobileOverlay =
+    document.getElementById("mobileOverlay");
 
-// =========================================
-// CHAT STORAGE
-// =========================================
+// MENU
 
-let chats = JSON.parse(
+menuBtn.addEventListener("click", () => {
 
-    localStorage.getItem("sunnbee_chats")
+    sidebar.classList.toggle("active");
 
-) || []
+    mobileOverlay.classList.toggle(
+        "active"
+    );
+});
 
-let currentChatId = null
+mobileOverlay.addEventListener("click", () => {
 
-// =========================================
-// SAVE CHAT
-// =========================================
+    sidebar.classList.remove("active");
 
-function saveChats(){
+    mobileOverlay.classList.remove(
+        "active"
+    );
+});
 
-    localStorage.setItem(
-
-        "sunnbee_chats",
-
-        JSON.stringify(chats)
-    )
-}
-
-// =========================================
-// CREATE NEW CHAT
-// =========================================
-
-function createNewChat(){
-
-    const chatId =
-    Date.now()
-
-    const newChat = {
-
-        id: chatId,
-
-        title: "New Chat ☀️",
-
-        messages: [
-
-            {
-                type:"bot",
-
-                text:`
-                Haiii bestieee ☀️💕<br>
-                Aku SunnBee ✨<br><br>
-
-                Temen ngobrol kamu yang:
-                lucu,
-                santai,
-                dan siap nemenin yapping 😭💕
-                `,
-
-                emotion:"happy"
-            }
-        ]
-    }
-
-    chats.unshift(newChat)
-
-    currentChatId =
-    chatId
-
-    saveChats()
-
-    renderHistory()
-
-    loadChat(chatId)
-}
-
-// =========================================
-// LOAD CHAT
-// =========================================
-
-async function loadChat(chatId){
-
-    currentChatId =
-    chatId
-
-    const chat =
-    chats.find(
-        c => c.id === chatId
-    )
-
-    if(!chat) return
-
-    chatArea.innerHTML = ""
-
-    for(const msg of chat.messages){
-
-        await addMessageToUI(
-
-            msg.text,
-
-            msg.type,
-
-            msg.emotion
-        )
-    }
-}
-
-// =========================================
-// RENDER HISTORY
-// =========================================
-
-function renderHistory(){
-
-    historyList.innerHTML = ""
-
-    chats.forEach(chat => {
-
-        const item =
-        document.createElement("div")
-
-        item.className =
-        "history-item"
-
-        item.innerText =
-        chat.title
-
-        item.onclick = () => {
-
-            loadChat(chat.id)
-        }
-
-        historyList.appendChild(item)
-    })
-}
-
-// =========================================
-// TOGGLE SIDEBAR
-// =========================================
-
-menuBtn.onclick = () => {
-
-    sidebar.classList.toggle("hide")
-}
-
-// =========================================
-// NEW CHAT BUTTON
-// =========================================
-
-newChatBtn.onclick = () => {
-
-    createNewChat()
-}
-
-// =========================================
-// TYPEWRITER EFFECT
-// =========================================
-
-async function typeText(
-    element,
-    text,
-    speed = 12
-){
-
-    let i = 0
-
-    while(i < text.length){
-
-        element.innerHTML +=
-        text.charAt(i)
-
-        i++
-
-        await new Promise(resolve =>
-            setTimeout(resolve, speed)
-        )
-
-        chatArea.scrollTop =
-        chatArea.scrollHeight
-    }
-}
-
-// =========================================
-// ADD MESSAGE UI
-// =========================================
-
-async function addMessageToUI(
-
-    text,
-    type,
-    emotion="happy"
-
-){
-
-    // USER
-    if(type === "user"){
-
-        const div =
-        document.createElement("div")
-
-        div.className =
-        "user-message"
-
-        div.innerHTML =
-        text
-
-        chatArea.appendChild(div)
-    }
-
-    // BOT
-    else{
-
-        const wrapper =
-        document.createElement("div")
-
-        wrapper.className =
-        "bot-wrapper"
-
-        const avatar =
-        document.createElement("img")
-
-        avatar.src =
-        `/static/reactions/${emotion}.png`
-
-        avatar.className =
-        "bot-avatar"
-
-        const message =
-        document.createElement("div")
-
-        message.className =
-        "bot-message"
-
-        wrapper.appendChild(avatar)
-
-        wrapper.appendChild(message)
-
-        chatArea.appendChild(wrapper)
-
-        await typeText(
-            message,
-            text
-        )
-    }
-
-    chatArea.scrollTop =
-    chatArea.scrollHeight
-}
-
-// =========================================
-// SAVE MESSAGE TO CHAT
-// =========================================
-
-function saveMessage(
-
-    text,
-    type,
-    emotion="happy"
-
-){
-
-    const chat =
-    chats.find(
-
-        c => c.id === currentChatId
-    )
-
-    if(!chat) return
-
-    // UPDATE TITLE
-    if(
-
-        type === "user" &&
-
-        chat.title === "New Chat ☀️"
-    ){
-
-        chat.title =
-        text.substring(0,25)
-    }
-
-    chat.messages.push({
-
-        text,
-        type,
-        emotion
-    })
-
-    saveChats()
-
-    renderHistory()
-}
-
-// =========================================
 // SEND MESSAGE
-// =========================================
 
-async function sendMessage(){
+async function sendMessage() {
 
     const message =
-    messageInput.value.trim()
+        input.value.trim();
 
-    if(!message) return
+    if(message === "") return;
 
     // USER MESSAGE
-    await addMessageToUI(
 
-        message,
+    const userDiv =
+        document.createElement("div");
 
-        "user"
-    )
+    userDiv.className =
+        "user-message";
 
-    saveMessage(
+    userDiv.innerText =
+        message;
 
-        message,
+    chatArea.appendChild(userDiv);
 
-        "user"
-    )
+    // TYPING
 
-    messageInput.value = ""
+    const typingRow =
+        document.createElement("div");
 
-    // =========================================
-    // TYPING BUBBLE
-    // =========================================
+    typingRow.className =
+        "message-row";
 
-    const typing =
-    document.createElement("div")
+    typingRow.id =
+        "typingBubble";
 
-    typing.className =
-    "bot-wrapper"
+    typingRow.innerHTML = `
 
-    typing.id =
-    "typingBubble"
-
-    typing.innerHTML = `
-
-        <img
-        src="/static/reactions/typing.png"
-        class="bot-avatar">
+        <img class="reaction-img"
+             src="/static/reactions/typing.jpg">
 
         <div class="bot-message">
-
-            SunnBee lagi ngetik...
-
-            <div class="typing-dots">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-            </div>
-
+            SunnBee lagi mikirrr... ☀️
         </div>
-    `
+    `;
 
-    chatArea.appendChild(typing)
+    chatArea.appendChild(
+        typingRow
+    );
 
     chatArea.scrollTop =
-    chatArea.scrollHeight
+        chatArea.scrollHeight;
 
-    try{
+    input.value = "";
 
-        const response =
-        await fetch("/chat",{
+    // FETCH
+
+    const response =
+        await fetch("/chat", {
 
             method:"POST",
 
@@ -391,88 +104,53 @@ async function sendMessage(){
 
                 message:message
             })
-        })
+        });
 
-        const data =
-        await response.json()
+    const data =
+        await response.json();
 
-        // REMOVE TYPING
-        document
-        .getElementById("typingBubble")
-        .remove()
+    // REMOVE TYPING
 
-        // BOT MESSAGE
-        await addMessageToUI(
+    typingRow.remove();
 
-            data.reply,
+    // BOT MESSAGE
 
-            "bot",
+    const botRow =
+        document.createElement("div");
 
-            data.emotion
-        )
+    botRow.className =
+        "message-row";
 
-        saveMessage(
+    botRow.innerHTML = `
 
-            data.reply,
+        <img class="reaction-img"
+             src="/static/reactions/happy.jpg">
 
-            "bot",
+        <div class="bot-message">
+            ${data.reply}
+        </div>
+    `;
 
-            data.emotion
-        )
+    chatArea.appendChild(
+        botRow
+    );
 
-    }catch(error){
-
-        document
-        .getElementById("typingBubble")
-        .remove()
-
-        await addMessageToUI(
-
-            "yah error bestie 😭",
-
-            "bot",
-
-            "sad"
-        )
-    }
+    chatArea.scrollTop =
+        chatArea.scrollHeight;
 }
 
-// =========================================
-// BUTTON
-// =========================================
+sendBtn.addEventListener(
+    "click",
+    sendMessage
+);
 
-sendBtn.onclick =
-sendMessage
-
-// =========================================
-// ENTER
-// =========================================
-
-messageInput.addEventListener(
-
+input.addEventListener(
     "keypress",
+    (e) => {
 
-    function(e){
+        if(e.key === "Enter") {
 
-        if(e.key === "Enter"){
-
-            sendMessage()
+            sendMessage();
         }
     }
-)
-
-// =========================================
-// INITIALIZE
-// =========================================
-
-if(chats.length === 0){
-
-    createNewChat()
-}
-
-else{
-
-    renderHistory()
-
-    loadChat(chats[0].id)
-}
+);
