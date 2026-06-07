@@ -8,13 +8,11 @@
 </head>
 <body>
 
-    <!-- FLOATING DECOR -->
     <div class="floating floating1">☀️</div>
     <div class="floating floating2">✨</div>
     <div class="floating floating3">💕</div>
     <div class="floating floating4">🌈</div>
 
-    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-top">
             <div class="logo-area">
@@ -29,13 +27,10 @@
             <button id="newChatBtn">+ New Chat</button>
         </div>
 
-        <!-- HISTORY -->
         <div class="history-list" id="historyList"></div>
     </div>
 
-    <!-- MAIN -->
     <div class="main">
-        <!-- HEADER -->
         <div class="header">
             <button class="menu-btn" id="menuBtn">☰</button>
             <div class="header-title">
@@ -49,9 +44,7 @@
             </div>
         </div>
 
-        <!-- CHAT -->
         <div class="chat-area" id="chatArea">
-            <!-- FIRST MESSAGE -->
             <div class="bot-wrapper">
                 <img src="/static/reactions/happy.png" class="bot-avatar" alt="Bot Avatar">
                 <div class="bot-message">
@@ -62,14 +55,12 @@
             </div>
         </div>
 
-        <!-- INPUT -->
         <div class="input-area">
             <input type="text" id="messageInput" placeholder="curhat/yapping apa hari ini...? ✨">
             <button id="sendBtn">Kirim ☀️</button>
         </div>
     </div>
 
-    <!-- SCRIPT -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
