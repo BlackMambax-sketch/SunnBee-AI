@@ -6,20 +6,19 @@ const sidebar = document.getElementById("sidebar");
 const menuBtn = document.getElementById("menuBtn");
 const newChatBtn = document.getElementById("newChatBtn");
 
-// TOGGLE SIDEBAR (Responsive Desktop/Mobile Logic)
+// TOGGLE SIDEBAR (Pintar Desktop & Mobile)
 menuBtn.onclick = (e) => {
-    e.stopPropagation();
-    if(window.innerWidth > 768) {
+    e.stopPropagation(); // Mencegah event menutup sendiri langsung
+    if (window.innerWidth > 768) {
         sidebar.classList.toggle("hide");
     } else {
         sidebar.classList.toggle("show-mobile");
     }
-}
+};
 
-// CLOSE SIDEBAR ON CLICK OUTSIDE (Khusus Mobile)
+// AUTO-TUTUP SIDEBAR DI HP JIKA KLIK DI LUAR SIDEBAR
 document.addEventListener("click", (e) => {
     if (window.innerWidth <= 768 && sidebar.classList.contains("show-mobile")) {
-        // Jika yang diklik bukan di dalam sidebar
         if (!sidebar.contains(e.target) && e.target !== menuBtn) {
             sidebar.classList.remove("show-mobile");
         }
@@ -38,11 +37,11 @@ newChatBtn.onclick = () => {
         </div>
     `;
     
-    // Auto-tutup sidebar setelah klik New Chat (khusus mobile)
-    if(window.innerWidth <= 768) {
+    // Auto tutup menu di HP setelah pilih chat baru
+    if (window.innerWidth <= 768) {
         sidebar.classList.remove("show-mobile");
     }
-}
+};
 
 // ADD HISTORY
 function addHistory(text){
@@ -86,7 +85,7 @@ async function sendMessage(){
     addHistory(message);
     messageInput.value = "";
 
-    // TYPING BUBBLE
+    // TYPING EFFECT
     const typing = document.createElement("div");
     typing.className = "bot-wrapper";
     typing.id = "typingBubble";
@@ -105,22 +104,25 @@ async function sendMessage(){
             headers:{ "Content-Type":"application/json" },
             body:JSON.stringify({ message:message })
         });
-        
+
         const data = await response.json();
 
         // REMOVE TYPING
-        document.getElementById("typingBubble").remove();
+        const bubble = document.getElementById("typingBubble");
+        if(bubble) bubble.remove();
 
         // BOT MESSAGE
         addMessage(data.reply, "bot", data.emotion);
 
     }catch(error){
-        document.getElementById("typingBubble").remove();
+        const bubble = document.getElementById("typingBubble");
+        if(bubble) bubble.remove();
+        
         addMessage("yah error bestie 😭", "bot", "sad");
     }
 }
 
-// ACTION BUTTON & ENTER KEY
+// BUTTON & KEY LISTENERS
 sendBtn.onclick = sendMessage;
 
 messageInput.addEventListener("keypress", function(e){
